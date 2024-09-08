@@ -16,14 +16,14 @@
     <div class="container">
         <h1>Text Sentiment Analysis</h1>
         <form method="post" action="/textblob">
-            <textarea name="text" placeholder="Enter text to analyze..."></textarea><br>
+            <textarea name="q" placeholder="Enter text to analyze..."></textarea><br>
             <button type="submit">Analyze Sentiment</button>
         </form>
 
         {% if sentiment %}
         <div class="result">
             <h2>Analysis Result:</h2>
-            <p><strong>Text:</strong> {{ text }}</p>
+            <p><strong>Text:</strong> {{ q }}</p>
             <p><strong>Polarity:</strong> {{ sentiment.polarity }}</p>
             <p><strong>Subjectivity:</strong> {{ sentiment.subjectivity }}</p>
         </div>
