@@ -69,8 +69,13 @@
         <form action="/makersuite" method="post">
             <input type="submit" value="Financial Q&A">
         </form>
-        <form action="/textblob" method="post">
-            <input type="submit" value="textblob">
+        <h1>Text Sentiment Analysis</h1>
+        <form action="/" method="post">
+            <p>Please enter your text: </p>
+            <p><input type="text" name="text"></p>
+            <p><input type="submit" value="Enter"></p>
+        </form>
+        {{result}}
         </form>
         <form action="/" method="post">
             <input type="submit" value="End">
