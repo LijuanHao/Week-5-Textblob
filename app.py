@@ -68,20 +68,16 @@ def makersuite_gen():
     r = palm.chat(**model, messages=q)
     return(render_template("makersuite_gen_reply.html",r=r.last))
 
-@app.route("/textblob",methods=["GET","POST"])
-def textblob():
-    return(render_template("textblob.html"))
-
-@app.route("/text_sentiment", methods=["GET", "POST"])
+@app.route("/text_sentiment",methods=["GET","POST"])
 def text_sentiment():
-    if request.method == "POST":
-        text = request.form.get("text")
-        print(text)
-        r = TextBlob(text).sentiment
-        return(render_template("text_sentiment.html", result=r))
-    else:
-        return(render_template("text_sentiment.html", result="2"))
+    return(render_template("text_sentiment.html"))
 
+@app.route("/text_sentiment_result", methods=["GET", "POST"])
+def text_sentiment_result():
+    q = request.form.get("q")
+    r = textblob.TextBlob(q).sentiment
+    return(render_template("text_sentiment_result.html", r=r))
+    
 
 if __name__ == "__main__":
     app.run()
