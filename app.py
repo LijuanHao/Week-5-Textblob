@@ -6,7 +6,7 @@ import os
 import numpy as np
 
 api = os.getenv("MAKERSUITE_API_TOKEN")
-model = {"model":"models/chat-bison-001"}
+model = {"model":"models/text-bison-001"}
 palm.configure(api_key=api)
 
 app = Flask(__name__)
@@ -59,14 +59,14 @@ def makersuite():
 @app.route("/makersuite_1",methods=["GET","POST"])
 def makersuite_1():
     q = "Can you help me prepare my tax return?"
-    r = palm.chat(**model, messages=q)
-    return(render_template("makersuite_1_reply.html",r=r.last))
+    r = palm.generate_text(**model, prompt=q)
+    return(render_template("makersuite_1_reply.html",r=result))
 
 @app.route("/makersuite_gen",methods=["GET","POST"])
 def makersuite_gen():
     q = request.form.get("q")
-    r = palm.chat(**model, messages=q)
-    return(render_template("makersuite_gen_reply.html",r=r.last))
+    r = palm.genetate_text(**model, prompt=q)
+    return(render_template("makersuite_gen_reply.html",r=result))
 
 @app.route("/text_sentiment",methods=["GET","POST"])
 def text_sentiment():
@@ -78,6 +78,5 @@ def text_sentiment_result():
     r = textblob.TextBlob(q).sentiment
     return(render_template("text_sentiment_result.html", r=r))
     
-
 if __name__ == "__main__":
     app.run()
