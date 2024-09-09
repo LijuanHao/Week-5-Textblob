@@ -1,5 +1,6 @@
 
 from flask import Flask,render_template,request
+from textblob import TextBlob
 import google.generativeai as palm
 import os
 import numpy as np
@@ -66,6 +67,21 @@ def makersuite_gen():
     q = request.form.get("q")
     r = palm.chat(**model, messages=q)
     return(render_template("makersuite_gen_reply.html",r=r.last))
+
+@app.route("/textblob",methods=["GET","POST"])
+def textblob():
+    return(render_template("textblob.html"))
+
+@app.route("/text_sentiment", methods=["GET", "POST"])
+def text_sentiment():
+    if request.method == "POST":
+        text = request.form.get("text")
+        print(text)
+        r = TextBlob(text).sentiment
+        return(render_template("text_sentiment.html", result=r))
+    else:
+        return(render_template("text_sentiment.html", result="2"))
+
 
 if __name__ == "__main__":
     app.run()
