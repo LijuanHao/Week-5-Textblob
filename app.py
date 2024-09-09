@@ -1,6 +1,5 @@
 
 from flask import Flask,render_template,request
-from textblob import TextBlob
 import google.generativeai as palm
 import os
 import numpy as np
