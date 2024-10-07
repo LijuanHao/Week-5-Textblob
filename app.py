@@ -1,13 +1,12 @@
 
 from flask import Flask,render_template,request
-import google.generativeai as palm
+import google.generativeai as genai
 import os
 import numpy as np
 import textblob
 
-api = os.getenv("MAKERSUITE_API_TOKEN")
-model = {"model":"models/text-bison-001"}
-palm.configure(api_key=api)
+model = genai.GenerativeModel("gemini-1.5-flash")
+genai.configure(api_key="AIzaSyCotr34E5ke8YHUcMAs6hvWfQ09R4SKt2Y")
 
 app = Flask(__name__)
 user_name = ""
@@ -59,14 +58,14 @@ def makersuite():
 @app.route("/makersuite_1",methods=["GET","POST"])
 def makersuite_1():
     q = "Can you help me prepare my tax return?"
-    r = palm.generate_text(**model, prompt=q)
-    return(render_template("makersuite_1_reply.html",r=result))
+    r = model.generate_content(q)
+    return(render_template("makersuite_1_reply.html",r=r.text))
 
 @app.route("/makersuite_gen",methods=["GET","POST"])
 def makersuite_gen():
     q = request.form.get("q")
-    r = palm.genetate_text(**model, prompt=q)
-    return(render_template("makersuite_gen_reply.html",r=result))
+    r = model.generate_content(q)
+    return(render_template("makersuite_gen_reply.html",r=r.text))
 
 @app.route("/text_sentiment",methods=["GET","POST"])
 def text_sentiment():
