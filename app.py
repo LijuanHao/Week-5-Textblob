@@ -67,6 +67,10 @@ def makersuite_gen():
     r = model.generate_content(q)
     return(render_template("makersuite_gen_reply.html",r=r.text))
 
+@app.route("/transfer_money",methods=["GET","POST"])
+def transfer_money():
+    return(render_template("transfer_money.html"))
+
 @app.route("/text_sentiment",methods=["GET","POST"])
 def text_sentiment():
     return(render_template("text_sentiment.html"))

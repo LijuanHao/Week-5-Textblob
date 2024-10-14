@@ -1,0 +1,131 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer money</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <input type="text" id="payer" placeholder="Enter the Payer Address:">
+    <input type="text" id="payee" placeholder="Enter the Payee Address:">
+    <input type="text" id="amount" placeholder="Enter the Amount:">
+
+    <button class="btn" onclick="transfer()">Transfer</button>
+    <button class="btn" onclick="transaction()">Transaction</button>
+
+    <p id="view_payer"></p>
+    <p id="view_payee"></p>
+    <p id="view_amount"></p>
+
+    <h1>Transfer Money</h1>
+    <form action="/main" method="post">
+        <input type="submit" value="Main">
+    </form>
+    
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script>
+        // Define the contract address and ABI
+        const contractAddress = "0xfdea52cdde8abbd4ef37fb6da90f4d5e70ea2f9b";
+        const contractABI = [
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "amount_wx",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "payer_wx",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "payee_wx",
+                        "type": "address"
+                    }
+                ],
+                "name": "weixin",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "check_transaction",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        // Initialize Web3 and contract instance
+        const web3 = new Web3(Web3.givenProvider);
+        const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Transfer function to send money
+        async function transfer() {
+            const accounts = await web3.eth.requestAccounts();
+            const payer = document.getElementById("payer").value;
+            const payee = document.getElementById("payee").value;
+            const amount = document.getElementById("amount").value;
+
+            console.log("Payer:", payer, "Payee:", payee, "Amount:", amount);
+            
+            // Call the smart contract function to transfer money
+            try {
+                await contract.methods.weixin(amount, payer, payee).send({
+                    from: accounts[0]
+                });
+                alert("Transaction successful!");
+            } catch (error) {
+                console.error(error);
+                alert("Transaction failed!");
+            }
+        }
+
+        // Function to check the last transaction
+        async function transaction() {
+            try {
+                const result = await contract.methods.check_transaction().call();
+                const payer = result[0];
+                const payee = result[1];
+                const amount = result[2];
+
+                console.log("Payer:", payer, "Payee:", payee, "Amount:", amount);
+                
+                // Display the transaction details on the page
+                document.getElementById("view_payer").innerText = "Payer: " + payer;
+                document.getElementById("view_payee").innerText = "Payee: " + payee;
+                document.getElementById("view_amount").innerText = "Amount: " + amount;
+            } catch (error) {
+                console.error(error);
+                alert("Failed to retrieve transaction details!");
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
